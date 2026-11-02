@@ -226,7 +226,8 @@ dialog .x{position:absolute;right:10px;top:8px;background:none;border:0;font-siz
 <label>Name</label><input name="name" autocomplete="name" required>
 <label>Phone</label><input name="phone" type="tel" autocomplete="tel" required>
 <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-<label class="chk"><input type="checkbox" name="consent" required><span>I agree that A1 may contact me by call, text or email about my request.</span></label>
+<label class="chk"><input type="checkbox" name="consent" required><span><span>I agree that A1 Truck &amp; RV Center may contact me by phone, text message or email about my request, and may store and use the information I submit for that purpose, as described in the</span> <a href="/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</span></label>
+<label class="chk"><input type="checkbox" name="marketing"><span>Optional: I want to receive offers and news from A1 by text message or email. Message and data rates may apply. Reply STOP to opt out. Not a condition of service.</span></label>
 <button class="btn" style="width:100%" type="submit">Call me back</button>
 <div class="msg" role="status"></div>
 </form>
@@ -241,7 +242,7 @@ dialog .x{position:absolute;right:10px;top:8px;background:none;border:0;font-siz
 <a href="https://www.facebook.com/profile.php?id=61595882708450" target="_blank" rel="noopener" data-track="social_fb">Facebook</a>
 <a href="https://x.com/a1_commercialse" target="_blank" rel="noopener" data-track="social_x">X</a>
 <a href="https://www.linkedin.com/in/carlos-montoya-8b1131448" target="_blank" rel="noopener" data-track="social_li">LinkedIn</a>
-<a href="https://www.a1bodyandglass.com/privacy-policy/" target="_blank" rel="noopener">Privacy</a>
+<a href="/privacy/">Privacy</a>
 </div>
 </div></footer>
 
@@ -268,7 +269,8 @@ dialog .x{position:absolute;right:10px;top:8px;background:none;border:0;font-siz
 <label>Vehicles and what happened</label>
 <textarea name="message" placeholder="E.g.: 6 delivery vans, I need a backup shop"></textarea>
 <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-<label class="chk"><input type="checkbox" name="consent" required><span>I agree that A1 may contact me by call, text or email about my request.</span></label>
+<label class="chk"><input type="checkbox" name="consent" required><span><span>I agree that A1 Truck &amp; RV Center may contact me by phone, text message or email about my request, and may store and use the information I submit for that purpose, as described in the</span> <a href="/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</span></label>
+<label class="chk"><input type="checkbox" name="marketing"><span>Optional: I want to receive offers and news from A1 by text message or email. Message and data rates may apply. Reply STOP to opt out. Not a condition of service.</span></label>
 <button class="btn" style="width:100%" type="submit">Send and call me back</button>
 <div class="msg" role="status"></div>
 </form>
@@ -338,13 +340,13 @@ function L(en, es){ return document.documentElement.lang==='es' ? es : en; }
     if (fd.get('website')) return;                       /* honeypot */
     var phone = String(fd.get('phone')||'').replace(/\D/g,'');
     if(!String(fd.get('name')||'').trim() || phone.length<10){ msg.className='msg err'; msg.textContent=L('Please enter your name and a valid phone number.','Escriba su nombre y un teléfono válido.'); return; }
-    if(!form.querySelector('input[name=consent]').checked){ msg.className='msg err'; msg.textContent=L('Please accept the contact consent.','Acepte el consentimiento de contacto.'); return; }
+    if(!form.querySelector('input[name=consent]').checked){ msg.className='msg err'; msg.textContent=L('Please accept the contact and data-use consent.','Acepte el consentimiento de contacto.'); return; }
     if(!LEAD_EMAIL){ msg.className='msg err'; msg.innerHTML=L('Form not available right now. Please call <a href="tel:+19549744479">954-974-4479</a>.','Formulario no disponible ahora. Llame al <a href="tel:+19549744479">954-974-4479</a>.'); track('lead_error',{reason:'no_endpoint'}); return; }
     var data = {
-      _subject:'New lead - A1 Truck & RV landing', _template:'table', _captcha:'false',
+      _subject:'New lead ['+(attr.utm_source||'web')+'] - A1 Truck & RV Center', _template:'table', _captcha:'false', _autoresponse:'Thank you for contacting A1 Truck & RV Center. We received your request and our team will contact you shortly. Urgent? Call 954-974-4479. / Gracias por contactar a A1 Truck & RV Center. Recibimos su solicitud y nuestro equipo le contactará pronto. ¿Urgente? Llame al 954-974-4479.',
       name:fd.get('name'), phone:fd.get('phone'), email:fd.get('email')||'', company:fd.get('company')||'',
       segment:fd.get('segment')||'', message:fd.get('message')||'', context:ctx, language:document.documentElement.lang,
-      page:location.href, utm_source:attr.utm_source||'', utm_medium:attr.utm_medium||'', utm_campaign:attr.utm_campaign||'', referrer:attr.referrer
+      consent_contact:'yes', consent_marketing:(form.querySelector('input[name=marketing]').checked?'yes':'no'), consent_text:form.querySelector('input[name=consent]').parentNode.textContent.trim(), consent_at:new Date().toISOString(), consent_version:'2026-11-02', privacy_policy:location.origin+'/privacy/', page:location.href, utm_source:attr.utm_source||'', utm_medium:attr.utm_medium||'', utm_campaign:attr.utm_campaign||'', referrer:attr.referrer
     };
     var btn = form.querySelector('button[type=submit]'); btn.disabled=true;
     fetch('https://formsubmit.co/ajax/'+encodeURIComponent(LEAD_EMAIL), {method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify(data)})
